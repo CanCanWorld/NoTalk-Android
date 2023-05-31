@@ -1,0 +1,5 @@
+<resources>
+    <style name="Widget.Theme.NoTalk.MyView" parent="">
+        <item name="android:background">@color/status_bar</item>
+    </style>
+</resources>
