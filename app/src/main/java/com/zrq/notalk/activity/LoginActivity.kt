@@ -20,7 +20,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -39,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zrq.notalk.ui.theme.NoTalkTheme
 import com.zrq.notalk.vm.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.material.Surface
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -48,7 +48,12 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val that = this
-                Surface(modifier = Modifier.fillMaxSize()) {
+            NoTalkTheme {
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
                     val vm: LoginViewModel = viewModel()
 
                     val usernameFocus = remember {
@@ -151,5 +156,6 @@ class LoginActivity : ComponentActivity() {
                     }
                 }
             }
+        }
     }
 }

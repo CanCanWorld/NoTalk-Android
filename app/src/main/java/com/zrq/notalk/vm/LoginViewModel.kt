@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.tencent.mmkv.MMKV
 import com.zrq.notalk.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.ResponseBody
@@ -21,14 +22,19 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     var username by mutableStateOf("")
     var password by mutableStateOf("")
+    val mmkv = MMKV.defaultMMKV()
 
     fun login(result: (Boolean) -> Unit) {
         Log.d(TAG, "登录...")
-        apiService.login("zrq", "123456").enqueue(object : Callback<Boolean> {
+        apiService.login(username, password).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 val result = response.body()
                 if (result != null) {
                     result(result)
+                    if (result) {
+                        mmkv.putString("username", username)
+                        mmkv.putString("password", password)
+                    }
                 } else {
                     result(false)
                 }

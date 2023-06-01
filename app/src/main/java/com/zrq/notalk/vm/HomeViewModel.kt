@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.zrq.notalk.R
+import com.zrq.notalk.entity.BottomItemEntity
 import com.zrq.notalk.entity.Note
 import com.zrq.notalk.entity.NoteItem
 import com.zrq.notalk.network.ApiService
@@ -30,6 +32,12 @@ class HomeViewModel @Inject constructor(
 
     val notes by mutableStateOf(mutableStateListOf<NoteItem>())
     var input by mutableStateOf("")
+
+    val bottomItems = listOf(
+        BottomItemEntity("首页", R.drawable.baseline_home_24),
+        BottomItemEntity("我的", R.drawable.baseline_person_24),
+    )
+    var currentIndex by mutableStateOf(0)
 
     fun loadNotes(result: (Boolean) -> Unit) {
         apiService.queryAllNotes().enqueue(object : Callback<Note> {

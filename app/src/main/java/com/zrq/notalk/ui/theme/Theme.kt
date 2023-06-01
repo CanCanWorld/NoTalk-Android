@@ -17,25 +17,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Pink40,
-    secondary = Pink40,
-    tertiary = Pink40
+    primary = Grey,
+    secondary = Grey,
+    tertiary = Grey
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Pink40,
-    primaryContainer = Pink40,
-    secondary = Pink40,
-    tertiary = Pink40,
-    outlineVariant = Pink40,
-
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
+    primary = Grey,
+    primaryContainer = Grey,
+    secondary = Grey,
 )
 
 @Composable
@@ -46,10 +36,10 @@ fun NoTalkTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//            val context = LocalContext.current
+//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//        }
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
