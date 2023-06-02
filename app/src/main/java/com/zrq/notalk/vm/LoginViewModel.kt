@@ -1,15 +1,16 @@
 package com.zrq.notalk.vm
 
 import android.app.Application
+import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import com.tencent.mmkv.MMKV
+import com.zrq.notalk.activity.HomeActivity
+import com.zrq.notalk.entity.User
 import com.zrq.notalk.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,30 +20,42 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val application: Application,
     private val apiService: ApiService
-) : ViewModel() {
+) : BaseViewModel() {
     var username by mutableStateOf("")
     var password by mutableStateOf("")
-    val mmkv = MMKV.defaultMMKV()
+    var showLoadingDialog by mutableStateOf(false)
 
-    fun login(result: (Boolean) -> Unit) {
+    init {
+        username = mmkv.getString("username", "").toString()
+        password = mmkv.getString("password", "").toString()
+        if (username != "" && password != "") {
+            login()
+        }
+    }
+
+    fun login() {
         Log.d(TAG, "登录...")
-        apiService.login(username, password).enqueue(object : Callback<Boolean> {
-            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                val result = response.body()
-                if (result != null) {
-                    result(result)
-                    if (result) {
-                        mmkv.putString("username", username)
-                        mmkv.putString("password", password)
-                    }
+        showLoadingDialog = true
+        apiService.login(username, password).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                val user = response.body()
+                showLoadingDialog = false
+                if (user != null) {
+                    mmkv.putString("username", user.username)
+                    mmkv.putString("password", user.password)
+                    mmkv.putInt("uid", user.id)
+                    Toast.makeText(application, "登录成功", Toast.LENGTH_SHORT).show()
+                    activity.startActivity(Intent(activity, HomeActivity::class.java))
+                    activity.finish()
                 } else {
-                    result(false)
+                    Toast.makeText(application, "登录失败", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 t.printStackTrace()
-                result(false)
+                showLoadingDialog = false
+                Toast.makeText(application, "登录失败", Toast.LENGTH_SHORT).show()
             }
         })
     }

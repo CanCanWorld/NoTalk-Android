@@ -22,14 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zrq.notalk.ui.theme.Grey
-import com.zrq.notalk.vm.MineWidgetVM
+import com.zrq.notalk.vm.MineViewModel
 import com.zrq.notalk.R
 import com.zrq.notalk.entity.MineItemEntity
 import com.zrq.notalk.ui.theme.LightGrey
 
 @Composable
 fun MineWidget(
-    vm: MineWidgetVM = viewModel()
+    vm: MineViewModel
 ) {
     Column(
         modifier = Modifier
@@ -62,14 +62,15 @@ fun MineWidget(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "用户名",
-                    fontSize = 20.sp,
+                    text = vm.username,
+                    fontSize = 24.sp,
                     color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
+                Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "188888888",
+                    text = "uid: ${vm.uid}",
                     fontSize = 13.sp,
                     color = Color.White,
                     maxLines = 1,
@@ -130,7 +131,8 @@ fun MineItemWidget(
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = item.title,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            color = Grey,
         )
         Icon(
             imageVector = Icons.Default.KeyboardArrowRight,

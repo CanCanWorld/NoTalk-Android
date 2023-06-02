@@ -6,5 +6,5 @@ data class NoteItem(
     val id: Int,
     val time: String,
     val uid: Int,
-    val user: User
+    val user: User?
 )
