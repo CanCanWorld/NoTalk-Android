@@ -29,11 +29,11 @@ import com.zrq.notalk.R
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.NoTalkTheme
 import com.zrq.notalk.ui.theme.White
-import com.zrq.notalk.vm.NoteViewModel
+import com.zrq.notalk.vm.WriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NoteActivity : BaseActivity() {
+class WriteActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class NoteActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    val vm: NoteViewModel = viewModel()
+                    val vm: WriteViewModel = viewModel()
                     initViewModel(vm)
                     Column(
                         modifier = Modifier

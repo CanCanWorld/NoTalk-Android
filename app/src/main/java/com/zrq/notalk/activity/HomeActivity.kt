@@ -19,10 +19,12 @@ import com.zrq.notalk.R
 import com.zrq.notalk.entity.BottomItemEntity
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.NoTalkTheme
-import com.zrq.notalk.ui.widget.HomeWidget
-import com.zrq.notalk.ui.widget.MineWidget
-import com.zrq.notalk.vm.HomeViewModel
+import com.zrq.notalk.ui.page.NotePage
+import com.zrq.notalk.ui.page.MinePage
+import com.zrq.notalk.ui.page.PicPage
+import com.zrq.notalk.vm.NoteViewModel
 import com.zrq.notalk.vm.MineViewModel
+import com.zrq.notalk.vm.PicViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,7 +32,8 @@ class HomeActivity : BaseActivity() {
 
 
     private val bottomItems = listOf(
-        BottomItemEntity("首页", R.drawable.baseline_home_24),
+        BottomItemEntity("文章", R.drawable.baseline_event_note_24),
+        BottomItemEntity("图片", R.drawable.baseline_insert_photo_24),
         BottomItemEntity("我的", R.drawable.baseline_person_24),
     )
     private var currentIndex by mutableStateOf(0)
@@ -44,10 +47,12 @@ class HomeActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    val homeViewModel: HomeViewModel = viewModel()
+                    val homeViewModel: NoteViewModel = viewModel()
                     val mineViewModel: MineViewModel = viewModel()
+                    val picViewModel: PicViewModel = viewModel()
                     initViewModel(homeViewModel)
                     initViewModel(mineViewModel)
+                    initViewModel(picViewModel)
 
                     Scaffold(
                         bottomBar = {
@@ -85,11 +90,15 @@ class HomeActivity : BaseActivity() {
                         Box(modifier = Modifier.padding(padding)) {
                             when (currentIndex) {
                                 0 -> {
-                                    HomeWidget(homeViewModel)
+                                    NotePage(homeViewModel)
                                 }
 
-                                1 -> {
-                                    MineWidget(mineViewModel)
+                                1->{
+                                    PicPage(picViewModel)
+                                }
+
+                                2 -> {
+                                    MinePage(mineViewModel)
                                 }
                             }
                         }

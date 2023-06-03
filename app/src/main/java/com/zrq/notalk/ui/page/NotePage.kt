@@ -1,4 +1,4 @@
-package com.zrq.notalk.ui.widget
+package com.zrq.notalk.ui.page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,24 +14,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zrq.notalk.R
+import com.zrq.notalk.ui.item.HomeNoteItem
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.LightGrey
-import com.zrq.notalk.ui.theme.White
-import com.zrq.notalk.vm.HomeViewModel
+import com.zrq.notalk.vm.NoteViewModel
 
 /**
  * @Description:
@@ -39,8 +34,8 @@ import com.zrq.notalk.vm.HomeViewModel
  * @date 2023/6/1 14:58
  */
 @Composable
-fun HomeWidget(
-    vm: HomeViewModel
+fun NotePage(
+    vm: NoteViewModel
 ) {
 
     vm.loadNotes {}
@@ -85,55 +80,7 @@ fun HomeWidget(
             ) {
 
                 items(vm.notes.size) {
-                    val noteItem = vm.notes[it]
-                    Column {
-                        Box(
-                            modifier = Modifier
-                                .padding(
-                                    vertical = 5.dp,
-                                    horizontal = 10.dp,
-                                )
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(White)
-                                .padding(10.dp),
-                        ) {
-                            Column() {
-                                Text(
-                                    text = noteItem.title,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 16.sp,
-                                    color = Color.Black,
-                                )
-                                Row(
-                                    modifier = Modifier.padding(vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Text(
-                                        text = noteItem.user?.username ?: "未知用户",
-                                        color = Grey,
-                                    )
-                                    Text(
-                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                        text = "|",
-                                        fontSize = 13.sp,
-                                        color = Color.Gray,
-                                    )
-                                    Text(
-                                        text = noteItem.time,
-                                        color = Color.Gray,
-                                        fontSize = 13.sp,
-                                    )
-                                }
-                                Text(
-                                    text = noteItem.content,
-                                    color = Grey,
-                                    fontSize = 14.sp,
-                                    lineHeight = 18.sp
-                                )
-                            }
-                        }
-                    }
+                    HomeNoteItem(noteItem = vm.notes[it])
                 }
             }
         }

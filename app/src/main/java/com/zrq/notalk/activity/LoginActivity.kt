@@ -3,7 +3,6 @@ package com.zrq.notalk.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,12 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.remember
@@ -26,7 +23,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +35,7 @@ import com.zrq.notalk.ui.theme.NoTalkTheme
 import com.zrq.notalk.vm.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.Surface
-import androidx.compose.ui.window.Dialog
+import com.zrq.notalk.ui.dialog.LoadingDialog
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.White
 
@@ -72,18 +68,7 @@ class LoginActivity : BaseActivity() {
                     val focusManager = LocalFocusManager.current
 
                     if (vm.showLoadingDialog) {
-                        Dialog(
-                            onDismissRequest = { },
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .background(Color.White),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
+                        LoadingDialog()
                     }
 
                     Column {

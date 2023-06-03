@@ -14,7 +14,9 @@ class MineViewModel : BaseViewModel() {
         MineItemEntity("联系我们", R.drawable.baseline_call_24) {},
         MineItemEntity("使用帮助", R.drawable.baseline_help_24) {},
         MineItemEntity("问题反馈", R.drawable.baseline_question_answer_24) {},
-        MineItemEntity("修改密码", R.drawable.baseline_drive_file_rename_outline_24) {},
+        MineItemEntity("修改密码", R.drawable.baseline_drive_file_rename_outline_24) {
+            isShowPasswordDialog = true
+        },
     )
     val mineItem2 = listOf(
         MineItemEntity("检查更新", R.drawable.baseline_update_24) {},
@@ -29,10 +31,17 @@ class MineViewModel : BaseViewModel() {
 
     var username by mutableStateOf("")
     var uid by mutableStateOf("")
+    var isShowPasswordDialog by mutableStateOf(false)
+    var passwordInput by mutableStateOf("")
+    var isPasswordError by mutableStateOf(false)
 
     init {
         username = mmkv.getString("username", "").toString()
         uid = mmkv.getString("uid", "").toString()
+    }
+
+    fun changePassword() {
+        isPasswordError = passwordInput.length < 6
     }
 
     private companion object {

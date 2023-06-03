@@ -7,6 +7,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
+import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -28,5 +29,5 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/note")
-    fun addNote(@QueryMap map: Map<String, Any?>): Call<Boolean>
+    fun addNote(@FieldMap map: Map<String,@JvmSuppressWildcards Any?>): Call<Boolean>
 }
