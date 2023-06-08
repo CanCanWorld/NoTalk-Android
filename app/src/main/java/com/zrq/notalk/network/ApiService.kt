@@ -1,18 +1,20 @@
 package com.zrq.notalk.network
 
+import com.zrq.notalk.entity.Image
 import com.zrq.notalk.entity.Note
-import com.zrq.notalk.entity.NoteItem
 import com.zrq.notalk.entity.User
-import okhttp3.ResponseBody
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
 
 /**
  * @Description:
@@ -29,5 +31,12 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/note")
-    fun addNote(@FieldMap map: Map<String,@JvmSuppressWildcards Any?>): Call<Boolean>
+    fun addNote(@FieldMap map: Map<String, @JvmSuppressWildcards Any?>): Call<Boolean>
+
+    @GET("/img")
+    fun getPicList(): Call<Image>
+
+    @Multipart
+    @POST("/img")
+    fun uploadPic(@Part("file") requestBody: RequestBody, @Part("uid") uid: Int): Call<Boolean>
 }

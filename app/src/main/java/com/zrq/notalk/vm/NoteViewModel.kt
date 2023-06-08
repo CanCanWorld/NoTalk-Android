@@ -1,7 +1,6 @@
 package com.zrq.notalk.vm
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -25,7 +24,6 @@ import javax.inject.Inject
 @SuppressLint("MutableCollectionMutableState")
 @HiltViewModel
 class NoteViewModel @Inject constructor(
-    private val application: Application,
     private val apiService: ApiService
 ) : BaseViewModel() {
 
