@@ -23,20 +23,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.zrq.notalk.R
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.zrq.notalk.entity.BottomItemEntity
+import com.zrq.notalk.ui.page.MinePage
+import com.zrq.notalk.ui.page.NotePage
+import com.zrq.notalk.ui.page.PicPage
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.NoTalkTheme
-import com.zrq.notalk.ui.page.NotePage
-import com.zrq.notalk.ui.page.MinePage
-import com.zrq.notalk.ui.page.PicPage
 import com.zrq.notalk.utils.Constants.REQUEST_CODE_IMAGE
-import com.zrq.notalk.vm.NoteViewModel
 import com.zrq.notalk.vm.MineViewModel
+import com.zrq.notalk.vm.NoteViewModel
 import com.zrq.notalk.vm.PicViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Date
+import com.zrq.notalk.R
+
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
@@ -51,6 +55,8 @@ class HomeActivity : BaseActivity() {
     lateinit var homeViewModel: NoteViewModel
     lateinit var mineViewModel: MineViewModel
     lateinit var picViewModel: PicViewModel
+
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,8 +66,7 @@ class HomeActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-
-                    requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
+                    requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 110)
                     homeViewModel = viewModel()
                     mineViewModel = viewModel()
                     picViewModel = viewModel()
@@ -136,10 +141,8 @@ class HomeActivity : BaseActivity() {
                         val imagePath: String? = c.getString(columnIndex)
                         Log.d(TAG, "imagePath: $imagePath")
                         imagePath?.let {
-                            val bitmap = BitmapFactory.decodeFile(imagePath)
-                            val saveBitmapToFile = saveBitmapToFile(this, bitmap, "test")
-                            val imgFile = saveBitmapToFile
-                            picViewModel.uploadImage(imgFile)
+                            val saveBitmapToFile = saveBitmapToFile(this, imagePath, "test${Date().time}.png")
+                            picViewModel.uploadImage(saveBitmapToFile)
                         }
                         c.close()
                     }
@@ -148,10 +151,17 @@ class HomeActivity : BaseActivity() {
         }
     }
 
-    private fun saveBitmapToFile(context: Context, bitmap: Bitmap, filename: String): File {
+    private fun saveBitmapToFile(context: Context, imagePath: String, filename: String): File {
+//        val options = BitmapFactory.Options()
+//        options.inJustDecodeBounds = true
+//        BitmapFactory.decodeFile(imagePath, options)
+//        options.inSampleSize = 4
+//        options.inJustDecodeBounds = false
+
+        val bitmap = BitmapFactory.decodeFile(imagePath)
         val file = File(context.externalCacheDir, filename)
         val out = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
         out.flush()
         out.close()
         return file

@@ -1,6 +1,7 @@
 package com.zrq.notalk.vm
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -37,7 +38,8 @@ class MineViewModel : BaseViewModel() {
 
     init {
         username = mmkv.getString("username", "").toString()
-        uid = mmkv.getString("uid", "").toString()
+        uid = mmkv.getInt("uid", -1).toString()
+        Log.d(TAG, "uid: $uid")
     }
 
     fun changePassword() {

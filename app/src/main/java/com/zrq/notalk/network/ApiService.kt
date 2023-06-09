@@ -1,5 +1,6 @@
 package com.zrq.notalk.network
 
+import androidx.annotation.Keep
 import com.zrq.notalk.entity.Image
 import com.zrq.notalk.entity.Note
 import com.zrq.notalk.entity.User
@@ -21,10 +22,15 @@ import retrofit2.http.Query
  * @author zhangruiqian
  * @date 2023/5/30 15:31
  */
+@Keep
 interface ApiService {
 
     @GET("/login")
     fun login(@Query("username") username: String, @Query("password") password: String): Call<User>
+
+    @FormUrlEncoded
+    @POST("/register")
+    fun register(@FieldMap map: Map<String, @JvmSuppressWildcards Any?>): Call<Int>
 
     @GET("/note")
     fun queryAllNotes(): Call<Note>
@@ -38,5 +44,9 @@ interface ApiService {
 
     @Multipart
     @POST("/img")
-    fun uploadPic(@Part("file") requestBody: RequestBody, @Part("uid") uid: Int): Call<Boolean>
+    fun uploadPic(
+        @Part("file\"; filename=\"image.png\"") requestBody: RequestBody,
+        @Part("uid") uid: Int,
+        @Part("time") time: Long,
+    ): Call<Boolean>
 }

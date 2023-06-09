@@ -1,7 +1,11 @@
 package com.zrq.notalk.entity
 
+import androidx.annotation.Keep
+
+@Keep
 class Note : ArrayList<NoteItem>()
 
+@Keep
 data class NoteItem(
     val content: String,
     val title: String,

@@ -5,17 +5,18 @@ import android.app.Application
 import android.content.Intent
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.zrq.notalk.activity.ImageDetailActivity
 import com.zrq.notalk.entity.Image
 import com.zrq.notalk.entity.ImageItem
 import com.zrq.notalk.network.ApiService
 import com.zrq.notalk.utils.Constants.REQUEST_CODE_IMAGE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +38,7 @@ class PicViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val images by mutableStateOf(mutableStateListOf<ImageItem>())
+    var isRefresh by mutableStateOf(false)
 
     fun getList() {
         apiService.getPicList().enqueue(object : Callback<Image> {
@@ -45,11 +47,14 @@ class PicViewModel @Inject constructor(
                 if (image != null) {
                     images.clear()
                     images.addAll(image)
+                    Toast.makeText(application, "刷新成功一共${images.size}条数据", Toast.LENGTH_SHORT).show()
                 }
+                isRefresh = false
             }
 
             override fun onFailure(call: Call<Image>, t: Throwable) {
                 t.printStackTrace()
+                isRefresh = false
             }
 
         })
@@ -68,16 +73,29 @@ class PicViewModel @Inject constructor(
 
         val requestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), imgFile)
 
-        apiService.uploadPic(requestBody, uid).enqueue(object : Callback<Boolean> {
+        apiService.uploadPic(requestBody, uid, Date().time).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 val result = response.body() ?: false
                 Log.d(TAG, "上传结果：$result")
+                if (result){
+                    Toast.makeText(application, "上传成功", Toast.LENGTH_SHORT).show()
+                    getList()
+                }else{
+                    Toast.makeText(application, "上传失败，可能文件过大", Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
                 t.printStackTrace()
+                Toast.makeText(application, "上传失败，服务器出问题了", Toast.LENGTH_SHORT).show()
             }
 
+        })
+    }
+
+    fun jumpToDetail(path: String) {
+        activity.startActivity(Intent(activity, ImageDetailActivity::class.java).apply {
+            putExtra("image_path", path)
         })
     }
 

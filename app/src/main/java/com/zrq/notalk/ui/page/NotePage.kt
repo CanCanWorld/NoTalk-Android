@@ -22,6 +22,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.zrq.notalk.R
 import com.zrq.notalk.ui.item.HomeNoteItem
 import com.zrq.notalk.ui.theme.Grey
@@ -38,13 +40,20 @@ fun NotePage(
     vm: NoteViewModel
 ) {
 
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = vm.isRefresh)
     vm.loadNotes {}
 
     Box(
         modifier = Modifier
             .background(Grey)
     ) {
-
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                vm.isRefresh = true
+                vm.loadNotes{}
+            }
+        ) {
         Column {
             BasicTextField(
                 value = vm.input,
@@ -105,6 +114,7 @@ fun NotePage(
                 contentDescription = "创建",
                 tint = LightGrey
             )
+        }
         }
 
     }

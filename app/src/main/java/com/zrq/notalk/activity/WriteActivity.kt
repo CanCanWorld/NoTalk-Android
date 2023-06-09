@@ -126,7 +126,7 @@ class WriteActivity : BaseActivity() {
                                             verticalAlignment = Alignment.CenterVertically,
                                         ) {
                                             Text(
-                                                text = "标题需大于5字",
+                                                text = "标题需大于2字",
                                                 color = Color.Red,
                                                 fontSize = 14.sp
                                             )
@@ -178,7 +178,7 @@ class WriteActivity : BaseActivity() {
                                             verticalAlignment = Alignment.CenterVertically,
                                         ) {
                                             Text(
-                                                text = "内容需大于15字",
+                                                text = "内容需大于5字",
                                                 color = Color.Red,
                                                 fontSize = 14.sp
                                             )

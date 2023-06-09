@@ -11,23 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,6 +25,8 @@ import com.zrq.notalk.vm.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.Surface
 import com.zrq.notalk.ui.dialog.LoadingDialog
+import com.zrq.notalk.ui.dialog.PasswordEditText
+import com.zrq.notalk.ui.dialog.UsernameEditText
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.White
 
@@ -43,11 +34,9 @@ import com.zrq.notalk.ui.theme.White
 class LoginActivity : BaseActivity() {
 
     @SuppressLint("SuspiciousIndentation")
-    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val that = this
             NoTalkTheme {
 
                 Surface(
@@ -56,16 +45,6 @@ class LoginActivity : BaseActivity() {
                 ) {
                     val vm: LoginViewModel = viewModel()
                     initViewModel(vm)
-
-                    val usernameFocus = remember {
-                        FocusRequester()
-                    }
-                    val passwordFocus = remember {
-                        FocusRequester()
-                    }
-
-                    val keyboardController = LocalSoftwareKeyboardController.current
-                    val focusManager = LocalFocusManager.current
 
                     if (vm.showLoadingDialog) {
                         LoadingDialog()
@@ -89,44 +68,14 @@ class LoginActivity : BaseActivity() {
                                 color = Grey
                             )
 
-                            OutlinedTextField(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(usernameFocus),
-                                value = vm.username,
-                                onValueChange = {
-                                    vm.username = it
-                                },
-                                singleLine = true,
-                                label = {
-                                    Text(text = "用户名")
-                                },
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                                keyboardActions = KeyboardActions {
-                                    passwordFocus.requestFocus()
-                                },
+                            UsernameEditText(
+                                vm = vm,
                             )
 
                             Spacer(modifier = Modifier.height(20.dp))
 
-                            OutlinedTextField(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(passwordFocus),
-                                value = vm.password,
-                                onValueChange = {
-                                    vm.password = it
-                                },
-                                singleLine = true,
-                                label = {
-                                    Text(text = "密码")
-                                },
-                                visualTransformation = PasswordVisualTransformation(),
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                keyboardActions = KeyboardActions {
-                                    keyboardController?.hide()
-                                    focusManager.clearFocus()
-                                }
+                            PasswordEditText(
+                                vm = vm,
                             )
 
                             Spacer(modifier = Modifier.height(30.dp))
@@ -146,6 +95,27 @@ class LoginActivity : BaseActivity() {
                                     modifier = Modifier
                                         .padding(4.dp),
                                     text = "登录",
+                                    fontSize = 18.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Grey,
+                                    contentColor = White
+                                ),
+                                onClick = {
+                                    vm.register()
+                                }
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(4.dp),
+                                    text = "注册",
                                     fontSize = 18.sp
                                 )
                             }

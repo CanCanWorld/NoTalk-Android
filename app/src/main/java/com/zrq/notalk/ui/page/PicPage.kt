@@ -21,6 +21,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.zrq.notalk.R
 import com.zrq.notalk.ui.theme.Grey
 import com.zrq.notalk.ui.theme.LightGrey
@@ -34,46 +36,64 @@ import com.zrq.notalk.vm.PicViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PicPage(vm: PicViewModel) {
+
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = vm.isRefresh)
+
     vm.getList()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(LightGrey)
     ) {
-        LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2)) {
-            items(vm.images.size) {
-                AsyncImage(
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                vm.isRefresh = true
+                vm.getList()
+            }
+        ) {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(vm.images.size) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickable {
+                                vm.jumpToDetail(vm.images[it].path)
+                            },
+                        contentScale = ContentScale.Crop,
+                        model = vm.images[it].path,
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp)
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(30.dp))
+                    .clickable {
+                        vm.jumpToPhoto()
+                    }
+                    .shadow(elevation = 10.dp)
+                    .background(Grey)
+                    .padding(10.dp)
+            ) {
+                Icon(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop,
-                    model = vm.images[it].path,
-                    contentDescription = null,
+                        .align(Alignment.Center),
+                    painter = painterResource(id = R.drawable.baseline_create_24),
+                    contentDescription = "创建",
+                    tint = LightGrey
                 )
             }
-        }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp)
-                .size(50.dp)
-                .clip(RoundedCornerShape(30.dp))
-                .clickable {
-                    vm.jumpToPhoto()
-                }
-                .shadow(elevation = 10.dp)
-                .background(Grey)
-                .padding(10.dp)
-        ) {
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                painter = painterResource(id = R.drawable.baseline_create_24),
-                contentDescription = "创建",
-                tint = LightGrey
-            )
         }
     }
 

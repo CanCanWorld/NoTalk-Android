@@ -29,10 +29,12 @@ class NoteViewModel @Inject constructor(
 
     val notes by mutableStateOf(mutableStateListOf<NoteItem>())
     var input by mutableStateOf("")
+    var isRefresh by mutableStateOf(false)
 
     fun loadNotes(result: (Boolean) -> Unit) {
         apiService.queryAllNotes().enqueue(object : Callback<Note> {
             override fun onResponse(call: Call<Note>, response: Response<Note>) {
+                isRefresh = false
                 val note = response.body()
                 if (note != null) {
                     notes.clear()
@@ -45,6 +47,7 @@ class NoteViewModel @Inject constructor(
 
             override fun onFailure(call: Call<Note>, t: Throwable) {
                 t.printStackTrace()
+                isRefresh = false
             }
         })
     }
